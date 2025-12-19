@@ -6,4 +6,8 @@ describe('3-module-5-task', () => {
   it('25 : -1 / -234 - 4 = 1000', () => {
     expect(getMinMax('25 : -1 / -234 - 4 = 1000')).toEqual({ min: -234, max: 1000 });
   });
+
+  it('-Infinity or 0 or Infinity or even NaN', () => {
+    expect(getMinMax('-Infinity or 0 or Infinity or even NaN')).toEqual({ min: -Infinity, max: +Infinity });
+  })
 });
