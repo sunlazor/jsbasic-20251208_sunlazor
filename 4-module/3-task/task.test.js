@@ -61,7 +61,7 @@ describe('4-module-3-task', () => {
     expect(table.querySelector('.js-first').hasAttribute('hidden')).toEqual(true);
   });
 
-  it('Проставит класс male/female, в зависимости от содержимого ячекйки Gender', () => {
+  it('Проставит класс male/female, в зависимости от содержимого ячейки Gender', () => {
     const table = document.createElement('table');
 
     table.innerHTML = `
