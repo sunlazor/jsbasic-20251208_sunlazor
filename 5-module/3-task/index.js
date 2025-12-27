@@ -1,4 +1,8 @@
 function initCarousel() {
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelector('.carousel__arrow_left').style.visibility = 'hidden';
+  })
+
   let carousel = document.querySelector('.carousel');
   var currentItem = currentItem === undefined ? 0 : currentItem;
 
