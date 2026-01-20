@@ -19,7 +19,8 @@ export default class UserTable {
     let table = document.createElement('table');
     let thead = table.createTHead();
     this.#makeHeadRow(thead);
-    this.#addDataToTable(rows, table);
+    let tbody = table.createTBody();
+    this.#addDataToTable(rows, tbody);
 
     this.elem = table;
   }
