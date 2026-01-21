@@ -1,21 +1,3 @@
-// <div class="carousel__slide" data-id="penang-shrimp">
-//   <img src="/assets/images/carousel/...значение slide.image..." class="carousel__img" alt="slide">
-//     <div class="carousel__caption">
-//       <span class="carousel__price">€<!--значение slide.price--></span>
-//       <div class="carousel__title"><!--значение slide.name--></div>
-//       <button type="button" class="carousel__button">
-//         <img src="/assets/images/icons/plus-icon.svg" alt="icon">
-//       </button>
-//     </div>
-// </div>
-
-// {
-//   name: 'Chicken cashew',
-//     price: 14,
-//   image: 'chicken_cashew.png',
-//   id: 'chicken-cashew'
-// },
-
 export default class Carousel {
   elem;
 
@@ -47,15 +29,6 @@ export default class Carousel {
       </div>
       <div class="carousel__inner">
 <!--        <div class="carousel__slide" data-id="penang-shrimp">-->
-<!--          <img src="/assets/images/carousel/penang_shrimp.png" class="carousel__img" alt="slide"/>-->
-<!--          <div class="carousel__caption">-->
-<!--            <span class="carousel__price">€16.00</span>-->
-<!--            <div class="carousel__title">Penang shrimp</div>-->
-<!--            <button type="button" class="carousel__button">-->
-<!--              <img src="/assets/images/icons/plus-icon.svg" alt="icon"/>-->
-<!--            </button>-->
-<!--          </div>-->
-<!--        </div>-->
       </div>
     </div>`
     );
@@ -77,6 +50,13 @@ export default class Carousel {
             </div>
         </div>`
       );
+
+      slidesComponent[index].querySelector('.carousel__button').onclick
+        = () => slidesComponent[index].querySelector('.carousel__button').dispatchEvent(
+        new CustomEvent("product-add", {
+          detail: slide.id,
+          bubbles: true,
+        }))
     });
 
     slidesComponent.forEach((slide) => carousel.querySelector('.carousel__inner').appendChild(slide));
