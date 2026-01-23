@@ -3,8 +3,6 @@ import createElement from '../../assets/lib/create-element.js';
 export default class Modal {
   modal;
 
-  // #title;
-  // #body;
   #escapeListener;
 
   constructor() {
@@ -25,16 +23,6 @@ export default class Modal {
 
   open() {
     document.body.classList.add('is-modal-open');
-
-    // this.setTitle(this.#title);
-    // this.setBody(this.#body);
-
-    // if (document.body.querySelector('.modal')) {
-    //   document.body.querySelector('.modal').style.display = '';
-    // } else {
-    //   document.body.appendChild(this.modal);
-    // }
-
     document.body.appendChild(this.modal);
 
     document.body.addEventListener('keydown', this.#escapeListener);
@@ -42,38 +30,22 @@ export default class Modal {
 
   close() {
     document.body.classList.remove('is-modal-open');
-    console.debug(document.body.querySelector('.modal'));
+
     if (document.body.querySelector('.modal')) {
       document.body.querySelector('.modal').remove();
     }
-    // document.body.querySelector('.modal').style.display = 'none';
 
     document.body.removeEventListener('keydown', this.#escapeListener);
   }
 
   setTitle(title) {
-    // this.#title = title;
-
     let titleBlock = this.modal.querySelector('.modal__title');
     titleBlock.textContent = title;
-    // titleBlock.textContent = this.#title;
   }
 
   setBody(body) {
-    // console.debug(body);
-    // this.#body = body;
-
-    let bodyBlock = this.modal.querySelector('.modal__body');
-    // bodyBlock.innerHTML = body.innerHTML;
-    bodyBlock = body.cloneNode(true);
+    let bodyBlock = body.cloneNode(true);
     this.modal.querySelector('.modal__body').appendChild(bodyBlock);
-
-    // consloe.debug(this.#body);
-    // consloe.debug(body);
-    // consloe.debug(body.innerHTML);
-    // bodyBlock.innerHTML = this.#body.innerHTML;
-
-    // console.debug(bodyBlock);
   }
 
   #createElement(html) {
