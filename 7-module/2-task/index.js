@@ -2,13 +2,35 @@ import createElement from '../../assets/lib/create-element.js';
 
 export default class Modal {
   modal;
+  escapeListener;
   constructor() {
     this.modal = this.#makeModal();
+
+    this.escapeListener = (event) => {
+      if (event.key === 'Escape') {
+        this.close();
+      }
+    }
+
+    document.body.addEventListener('click', (event) => {
+      if (event.target.closest('.modal__close')) {
+        this.close();
+      }
+    })
   }
 
   open() {
     document.body.classList.add('is-modal-open');
     document.body.appendChild(this.modal);
+
+    document.body.addEventListener('keydown', this.escapeListener);
+  }
+
+  close() {
+    document.body.classList.remove('is-modal-open');
+    document.body.querySelector('.modal').remove();
+
+    document.body.removeEventListener('keydown', this.escapeListener);
   }
 
   setTitle(title) {
