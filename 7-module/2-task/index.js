@@ -43,7 +43,9 @@ export default class Modal {
   close() {
     document.body.classList.remove('is-modal-open');
     console.debug(document.body.querySelector('.modal'));
-    document.body.querySelector('.modal').remove();
+    if (document.body.querySelector('.modal')) {
+      document.body.querySelector('.modal').remove();
+    }
     // document.body.querySelector('.modal').style.display = 'none';
 
     document.body.removeEventListener('keydown', this.#escapeListener);
@@ -62,7 +64,10 @@ export default class Modal {
     // this.#body = body;
 
     let bodyBlock = this.modal.querySelector('.modal__body');
-    bodyBlock.innerHTML = body.innerHTML;
+    // bodyBlock.innerHTML = body.innerHTML;
+    bodyBlock = body.cloneNode(true);
+    this.modal.querySelector('.modal__body').appendChild(bodyBlock);
+
     // consloe.debug(this.#body);
     // consloe.debug(body);
     // consloe.debug(body.innerHTML);
