@@ -1,21 +1,21 @@
 export default class StepSlider {
   elem;
   constructor({ steps, value = 0 }) {
-    let slider = this.#makeSlider();
+    let slider = this.#makeSlider(steps, value);
     this.#addClosestToClickSpanCalculation(slider);
     this.#addSliderChanges(slider);
 
     this.elem = slider;
   }
 
-  #makeSlider() {
-    return this.#createElement(`
+  #makeSlider(steps, value) {
+    let slider = this.#createElement(`
     <!--Корневой элемент слайдера-->
     <div class="slider">
 
       <!--Ползунок слайдера с активным значением-->
       <div class="slider__thumb" style="left: 50%;">
-        <span class="slider__value">2</span>
+        <span class="slider__value">${value}</span>
       </div>
 
       <!--Заполненная часть слайдера-->
@@ -23,14 +23,24 @@ export default class StepSlider {
 
       <!--Шаги слайдера-->
       <div class="slider__steps">
-        <span></span>
-        <span></span>
-        <span class="slider__step-active"></span>
-        <span></span>
-        <span></span>
+<!--        <span class="slider__step-active"></span>-->
+<!--        <span></span>-->
       </div>
     </div>
     `);
+
+    const stepsDiv = slider.querySelector('.slider__steps');
+    for (let i = 0; i < steps; i++) {
+      let span = document.createElement('SPAN');
+      if (i === value) {
+        span.classList.add('slider__step-active');
+      }
+      stepsDiv.appendChild(span);
+    }
+
+    this.#moveProgressBar(slider, steps, value)
+
+    return slider;
   }
 
   #createElement(html) {
@@ -84,11 +94,15 @@ export default class StepSlider {
       prevActiveSlider.classList.remove('slider__step-active');
       span.classList.add('slider__step-active');
 
-      let thumb = slider.querySelector('.slider__thumb');
-      let progress = slider.querySelector('.slider__progress');
-      let leftPercents = (100 / (spans.length - 1)) * event.detail;
-      thumb.style.left = `${leftPercents}%`;
-      progress.style.width = `${leftPercents}%`;
+      this.#moveProgressBar(slider, spans.length, event.detail);
     })
+  }
+
+  #moveProgressBar(slider, stepsCount, stepClicked) {
+    let thumb = slider.querySelector('.slider__thumb');
+    let progress = slider.querySelector('.slider__progress');
+    let leftPercents = (100 / (stepsCount - 1)) * stepClicked;
+    thumb.style.left = `${leftPercents}%`;
+    progress.style.width = `${leftPercents}%`;
   }
 }
