@@ -1,6 +1,9 @@
 export default class StepSlider {
   elem;
+  stepsCount;
   constructor({ steps, value = 0 }) {
+    this.stepsCount = steps;
+
     let slider = this.#makeSlider(steps, value);
     this.#addClosestToClickSpanCalculation(slider);
     this.#addSliderClickChanges(slider);
@@ -107,21 +110,42 @@ export default class StepSlider {
     progress.style.width = `${leftPercents}%`;
   }
 
+  #smoothProgressBarMoving(event, slider, thumb, progress) {
+    const sliderRect = slider.getBoundingClientRect();
+
+    let dist = event.clientX - sliderRect.left;
+    let leftPercents;
+    if (event.clientX < sliderRect.left) {
+      leftPercents = 0;
+    } else if (event.clientX > sliderRect.right) {
+      leftPercents = 100;
+    } else {
+      leftPercents = dist * 100 / sliderRect.width;
+    }
+
+    thumb.style.left = `${leftPercents}%`;
+    progress.style.width = `${leftPercents}%`;
+  }
+
   #addDragEvent(slider) {
     let thumb = slider.querySelector('.slider__thumb');
     thumb.ondragstart = () => false;
+    let progress = slider.querySelector('.slider__progress');
 
     thumb.addEventListener('pointerdown', (pdown) => {
       let spanId;
       pdown.preventDefault();
+      slider.classList.add('slider_dragging');
 
       document.onpointermove = (pmove) => {
         spanId = this.#calculateClosestSpan(slider, pmove);
+        this.#smoothProgressBarMoving(pmove, slider, thumb, progress);
       }
 
       document.addEventListener('pointerup', () => {
         document.onpointermove = () => false;
         document.onpointerup = () => false;
+        slider.classList.remove('slider_dragging');
 
         slider.dispatchEvent(new CustomEvent('slider-change', {
           detail: spanId,
