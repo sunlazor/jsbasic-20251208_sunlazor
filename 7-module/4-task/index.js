@@ -3,7 +3,9 @@ export default class StepSlider {
   constructor({ steps, value = 0 }) {
     let slider = this.#makeSlider(steps, value);
     this.#addClosestToClickSpanCalculation(slider);
-    this.#addSliderChanges(slider);
+    this.#addSliderClickChanges(slider);
+
+    this.#addDragEvent(slider);
 
     this.elem = slider;
   }
@@ -61,7 +63,6 @@ export default class StepSlider {
   }
 
   #calculateClosestSpan(slider, event) {
-    const sliderRect = slider.getBoundingClientRect();
     const spans = slider.querySelectorAll('.slider__steps span');
 
     let minDist = Number.MAX_SAFE_INTEGER;
@@ -81,7 +82,7 @@ export default class StepSlider {
     return spans.length - 1;
   }
 
-  #addSliderChanges(slider) {
+  #addSliderClickChanges(slider) {
     slider.addEventListener('slider-change', (event) => {
       const spans = slider.querySelectorAll('.slider__steps span');
       console.log(event.detail);
@@ -104,5 +105,29 @@ export default class StepSlider {
     let leftPercents = (100 / (stepsCount - 1)) * stepClicked;
     thumb.style.left = `${leftPercents}%`;
     progress.style.width = `${leftPercents}%`;
+  }
+
+  #addDragEvent(slider) {
+    let thumb = slider.querySelector('.slider__thumb');
+    thumb.ondragstart = () => false;
+
+    thumb.addEventListener('pointerdown', (pdown) => {
+      let spanId;
+      pdown.preventDefault();
+
+      document.onpointermove = (pmove) => {
+        spanId = this.#calculateClosestSpan(slider, pmove);
+      }
+
+      document.addEventListener('pointerup', () => {
+        document.onpointermove = () => false;
+        document.onpointerup = () => false;
+
+        slider.dispatchEvent(new CustomEvent('slider-change', {
+          detail: spanId,
+          bubbles: true,
+        }))
+      });
+    });
   }
 }
