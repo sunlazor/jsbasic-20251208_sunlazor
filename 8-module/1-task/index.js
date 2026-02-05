@@ -1,5 +1,3 @@
-import createElement from '../../assets/lib/create-element.js';
-
 export default class CartIcon {
   startPosition;
 
@@ -9,8 +7,14 @@ export default class CartIcon {
     this.addEventListeners();
   }
 
+  #createElement(html) {
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    return div.firstElementChild;
+  }
+
   render() {
-    this.elem = createElement('<div class="cart-icon"></div>');
+    this.elem = this.#createElement('<div class="cart-icon"></div>');
   }
 
   update(cart) {
@@ -46,23 +50,25 @@ export default class CartIcon {
       this.startPosition = {left: iconNode.left, top: iconNode.top};
     }
 
-    // console.log(`offsetTop: ${window.pageYOffset}`);
-    if (window.pageYOffset > this.startPosition.top) {
-      this.elem.style.position = 'fixed';
-      this.elem.y = '50px';
-      // this.elem.x = '20px';
-      // this.elem.x = document.documentElement.clientWidth - this.elem.offsetWidth - 10;
-      // this.elem.x = Math.round(document.querySelector('.container').getBoundingClientRect().right) + 20 + 'px';
-      // this.elem.x = Math.round(document.querySelector('.container').getBoundingClientRect().right) + 20;
-      this.elem.x = Math.min(
+    if (document.documentElement.clientWidth > 767 && window.pageYOffset > this.startPosition.top) {
+      let leftIndent = Math.min(
         document.querySelector('.container').getBoundingClientRect().right + 20,
         document.documentElement.clientWidth - this.elem.offsetWidth - 10
       ) + 'px';
-
-      console.log(`cont right: ${Math.round(document.querySelector('.container').getBoundingClientRect().right)}`);
-      console.log(`elem x: ${this.elem.x}`);
+      Object.assign(this.elem.style, {
+        position: 'fixed',
+        top: '50px',
+        zIndex: 1e3,
+        right: '10px',
+        left: leftIndent
+      });
     } else {
-      this.elem.style.position = '';
+      Object.assign(this.elem.style, {
+        position: '',
+        top: '',
+        left: '',
+        zIndex: ''
+      });
     }
   }
 }
