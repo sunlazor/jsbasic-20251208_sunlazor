@@ -5,5 +5,19 @@ export default class ProductGrid {
   constructor(products) {
     this.products = products;
     this.filters = {};
+
+    this.elem = this.#createElement(`
+      <div class="products-grid">
+      <div class="products-grid__inner">
+        <!--ВОТ ТУТ БУДУТ КАРТОЧКИ ТОВАРОВ-->
+      </div>
+      </div>
+    `);
+  }
+
+  #createElement(html) {
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    return div.firstElementChild;
   }
 }
