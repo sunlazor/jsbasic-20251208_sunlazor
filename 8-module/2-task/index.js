@@ -18,7 +18,7 @@ export default class ProductGrid {
   }
 
   updateFilter(filters) {
-    this.filters = filters;
+    Object.assign(this.filters, filters);
     this.#addProductCards();
   }
 
