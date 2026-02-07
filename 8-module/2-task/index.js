@@ -1,4 +1,3 @@
-import createElement from '../../assets/lib/create-element.js';
 import ProductCard from '../../6-module/2-task/index.js';
 
 export default class ProductGrid {
@@ -40,32 +39,31 @@ export default class ProductGrid {
       });
     } else {
       productsNodes = [];
-      this.products.forEach(product => {
-        console.log(this.filters);
+      for (const product of this.products) {
         // 1. Без орехов
         if (Object.hasOwn(this.filters, 'noNuts') && this.filters['noNuts'] === true
           && Object.hasOwn(product, 'nuts') && product['nuts'] === true) {
-          return;
+          continue;
         }
         // 2. Вегетарианское
-        if (Object.hasOwn(this.filters, 'vegeterianOnly') && this.filters['vegeterianOnly'] === true
-          && Object.hasOwn(product, 'vegeterian') && product['vegeterian'] !== true) {
-          return;
+        if (Object.hasOwn(this.filters, 'vegeterianOnly') && this.filters['vegeterianOnly'] === true) {
+          if (!Object.hasOwn(product, 'vegeterian') || product['vegeterian'] !== true) {
+            continue;
+          }
         }
         // 3. Максимальная острота
-        if (Object.hasOwn(this.filters, 'maxSpiciness') && this.filters['maxSpiciness'] !== undefined
+        if (Object.hasOwn(this.filters, 'maxSpiciness') && Number.isFinite(this.filters['maxSpiciness'])
           && Object.hasOwn(product, 'spiciness') && product['spiciness'] > this.filters['maxSpiciness']) {
-          return;
+          continue;
         }
         // 4. Категория
-        if (Object.hasOwn(this.filters, 'category') && this.filters['category']
+        if (Object.hasOwn(this.filters, 'category') && !!this.filters['category']
           && Object.hasOwn(product, 'category') && product['category'] !== this.filters['category']) {
-          return;
+          continue;
         }
 
         productsNodes.push(new ProductCard(product).elem);
-        console.log(productsNodes);
-      });
+      }
     }
 
     inner.replaceChildren(...productsNodes);
