@@ -13,23 +13,46 @@ export default class Cart {
   }
 
   addProduct(product) {
-    // СКОПИРУЙТЕ СЮДЯ СВОЙ КОД
+    if (!!product) {
+      let placeInCart = this.cartItems.findIndex(item => {
+        return item.product.id === product.id;
+      });
+      if (placeInCart > 0) {
+        this.cartItems[placeInCart].count++;
+      } else {
+        let newItem = {
+          product: product,
+          count: 1,
+        }
+        placeInCart = this.cartItems.push(newItem) - 1;
+      }
+
+      this.onProductUpdate(this.cartItems[placeInCart]);
+    }
   }
 
   updateProductCount(productId, amount) {
-    // СКОПИРУЙТЕ СЮДЯ СВОЙ КОД
+    let placeInCart = this.cartItems.findIndex(item => {
+      return item.product.id === productId;
+    });
+    this.cartItems[placeInCart].count += amount;
+    if (this.cartItems[placeInCart].count <= 0) {
+      this.cartItems.splice(placeInCart, 1);
+    } else {
+      this.onProductUpdate(this.cartItems[placeInCart]);
+    }
   }
 
   isEmpty() {
-    // СКОПИРУЙТЕ СЮДЯ СВОЙ КОД
+    return this.cartItems.length === 0;
   }
 
   getTotalCount() {
-    // СКОПИРУЙТЕ СЮДЯ СВОЙ КОД
+    return this.cartItems.reduce((total, item) => total + item.count, 0);
   }
 
   getTotalPrice() {
-    // СКОПИРУЙТЕ СЮДЯ СВОЙ КОД
+    return this.cartItems.reduce((totalPrice, item) => totalPrice + item.product.price * item.count, 0);
   }
 
   renderProduct(product, count) {
