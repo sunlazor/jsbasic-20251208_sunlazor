@@ -107,7 +107,12 @@ export default class Cart {
   }
 
   renderModal() {
-    // ...ваш код
+    let modalWindow = new Modal();
+    modalWindow.setTitle('Your order');
+
+    let modalBody = this.#makeModalBody();
+    modalWindow.setBody(modalBody);
+    modalWindow.open();
   }
 
   onProductUpdate(cartItem) {
@@ -122,6 +127,17 @@ export default class Cart {
 
   addEventListeners() {
     this.cartIcon.elem.onclick = () => this.renderModal();
+  }
+
+  #makeModalBody() {
+    let itemsContainer = document.createElement('div');
+    this.cartItems.forEach(item => {
+      itemsContainer.appendChild(this.renderProduct(item.product, item.count));
+    })
+
+    itemsContainer.appendChild(this.renderOrderForm())
+
+    return itemsContainer;
   }
 }
 
