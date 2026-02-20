@@ -17,7 +17,7 @@ export default class Cart {
       let placeInCart = this.cartItems.findIndex(item => {
         return item.product.id === product.id;
       });
-      if (placeInCart > 0) {
+      if (placeInCart >= 0) {
         this.cartItems[placeInCart].count++;
       } else {
         let newItem = {
@@ -36,10 +36,9 @@ export default class Cart {
       return item.product.id === productId;
     });
     this.cartItems[placeInCart].count += amount;
+    this.onProductUpdate(this.cartItems[placeInCart]);
     if (this.cartItems[placeInCart].count <= 0) {
       this.cartItems.splice(placeInCart, 1);
-    } else {
-      this.onProductUpdate(this.cartItems[placeInCart]);
     }
   }
 
@@ -112,13 +111,24 @@ export default class Cart {
 
     let modalBody = this.#makeModalBody();
     modalWindow.setBody(modalBody);
+    this.#addListenersToModal(modalWindow.modal)
     modalWindow.open();
   }
 
   onProductUpdate(cartItem) {
-    console.log(cartItem);
-
     this.cartIcon.update(this);
+
+    if (document.body.classList.contains('is-modal-open')) {
+      let productId = cartItem.product.id;
+      let modalBody = document.querySelector('.modal__body');
+      let productCount = modalBody.querySelector(`[data-product-id="${productId}"] .cart-counter__count`);
+      let productPrice = modalBody.querySelector(`[data-product-id="${productId}"] .cart-product__price`);
+      let infoPrice = modalBody.querySelector(`.cart-buttons__info-price`);
+
+      productCount.innerHTML = cartItem.count;
+      productPrice.innerHTML = `€${(cartItem.count * cartItem.product.price).toFixed(2)}`;
+      infoPrice.innerHTML = `€${this.getTotalPrice().toFixed(2)}`;
+    }
   }
 
   onSubmit(event) {
@@ -131,34 +141,30 @@ export default class Cart {
 
   #makeModalBody() {
     let itemsContainer = document.createElement('div');
+
     this.cartItems.forEach(item => {
-      let cartElement = this.renderProduct(item.product, item.count);
-
-      cartElement.onclick = () => {
-        console.log('clicked');
-      };
-      // console.log(cartElement);
-      // console.log(cartElement.dataset.productId);
-      // cartElement.addEventListener('click', (event) => {
-      //   // if (event.target.classList.contains('cart-counter__button_plus') {
-      //
-      //   console.log(event);
-      //
-      //   if (event.target.closest('.cart-counter__button_plus')) {
-      //     this.updateProductCount(cartElement.querySelector('.cart-product').dataset.productId, 1);
-      //     console.log(' count increaded ');
-      //   } else if (event.target.closest('.cart-counter__button_minus')) {
-      //     this.updateProductCount(cartElement.querySelector('.cart-product').dataset.productId, -1);
-      //     console.log(' count descreades ');
-      //   }
-      // });
-
-      itemsContainer.appendChild(cartElement);
+      itemsContainer.appendChild(this.renderProduct(item.product, item.count));
     });
 
     itemsContainer.appendChild(this.renderOrderForm());
 
     return itemsContainer;
+  }
+
+  #addListenersToModal(modalWindow) {
+    let cartProducts = modalWindow.querySelectorAll('.cart-product');
+
+    cartProducts.forEach(product => {
+      product.addEventListener('click', (event) => {
+        if (event.target.closest('.cart-counter__button_plus')) {
+          this.updateProductCount(product.dataset.productId, 1);
+          console.log(' count increaded ');
+        } else if (event.target.closest('.cart-counter__button_minus')) {
+          this.updateProductCount(product.dataset.productId, -1);
+          console.log(' count descreades ');
+        }
+      })
+    });
   }
 }
 
