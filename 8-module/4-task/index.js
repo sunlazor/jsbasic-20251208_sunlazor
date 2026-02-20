@@ -116,7 +116,7 @@ export default class Cart {
   }
 
   onProductUpdate(cartItem) {
-    // ...ваш код
+    console.log(cartItem);
 
     this.cartIcon.update(this);
   }
@@ -132,10 +132,31 @@ export default class Cart {
   #makeModalBody() {
     let itemsContainer = document.createElement('div');
     this.cartItems.forEach(item => {
-      itemsContainer.appendChild(this.renderProduct(item.product, item.count));
-    })
+      let cartElement = this.renderProduct(item.product, item.count);
 
-    itemsContainer.appendChild(this.renderOrderForm())
+      cartElement.onclick = () => {
+        console.log('clicked');
+      };
+      // console.log(cartElement);
+      // console.log(cartElement.dataset.productId);
+      // cartElement.addEventListener('click', (event) => {
+      //   // if (event.target.classList.contains('cart-counter__button_plus') {
+      //
+      //   console.log(event);
+      //
+      //   if (event.target.closest('.cart-counter__button_plus')) {
+      //     this.updateProductCount(cartElement.querySelector('.cart-product').dataset.productId, 1);
+      //     console.log(' count increaded ');
+      //   } else if (event.target.closest('.cart-counter__button_minus')) {
+      //     this.updateProductCount(cartElement.querySelector('.cart-product').dataset.productId, -1);
+      //     console.log(' count descreades ');
+      //   }
+      // });
+
+      itemsContainer.appendChild(cartElement);
+    });
+
+    itemsContainer.appendChild(this.renderOrderForm());
 
     return itemsContainer;
   }
