@@ -4,6 +4,7 @@ export default class Modal {
   modal;
 
   #escapeListener;
+  #closeListener;
 
   constructor() {
     this.modal = this.#makeModal();
@@ -14,11 +15,13 @@ export default class Modal {
       }
     }
 
-    document.body.addEventListener('click', (event) => {
+    this.#closeListener = (event) => {
       if (event.target.closest('.modal__close')) {
         this.close();
       }
-    })
+    }
+
+    document.body.addEventListener('click', this.#closeListener);
   }
 
   open() {
@@ -36,6 +39,7 @@ export default class Modal {
     }
 
     document.body.removeEventListener('keydown', this.#escapeListener);
+    document.body.removeEventListener('click', this.#closeListener);
   }
 
   setTitle(title) {
