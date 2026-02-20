@@ -5,6 +5,7 @@ import Modal from '../../7-module/2-task/index.js';
 
 export default class Cart {
   cartItems = []; // [product: {...}, count: N]
+  modal;
 
   constructor(cartIcon) {
     this.cartIcon = cartIcon;
@@ -106,13 +107,13 @@ export default class Cart {
   }
 
   renderModal() {
-    let modalWindow = new Modal();
-    modalWindow.setTitle('Your order');
+    this.modal = new Modal();
+    this.modal.setTitle('Your order');
 
     let modalBody = this.#makeModalBody();
-    modalWindow.setBody(modalBody);
-    this.#addListenersToModal(modalWindow.modal)
-    modalWindow.open();
+    this.modal.setBody(modalBody);
+    this.#addListenersToModal(this.modal.modal)
+    this.modal.open();
   }
 
   onProductUpdate(cartItem) {
@@ -162,6 +163,10 @@ export default class Cart {
         } else if (event.target.closest('.cart-counter__button_minus')) {
           this.updateProductCount(product.dataset.productId, -1);
           console.log(' count descreades ');
+        }
+
+        if (this.cartItems.length < 1) {
+          this.modal.close();
         }
       })
     });
