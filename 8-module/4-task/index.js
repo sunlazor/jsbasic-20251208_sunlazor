@@ -135,33 +135,32 @@ export default class Cart {
   onSubmit(event) {
     event.preventDefault();
 
-    let submitForm = document.querySelector('.cart-form');
-    console.log(typeof submitForm);
-    console.debug(submitForm);
-    console.dir(submitForm);
+    const submitButton = this.modal.elem.querySelector('[type="submit"]');
+    submitButton.classList.add('is-loading');
 
-    let submitButton = document.querySelector('.cart-buttons__button');
-    submitButton.classList.toggle('is-loading', true);
+    fetch('https://httpbin.org/post', {
+      method: 'POST',
+      body: new FormData(this.form)
+    })
+      .then((response) => {
+        if (response.ok) {
+          this.modal.setTitle("Success!");
+          this.cartItems.length = 0;
 
-    let formData = new FormData(submitForm);
-    let response = fetch('https://httpbin.org/post', {
-        method: 'POST',
-        body: formData,
-      }).then(response => response.json())
-    ;
+          const orderSuccessful = createElement(`
+          <div class="modal__body-inner">
+            <p>
+              Order successful! Your order is being cooked :) <br>
+              We’ll notify you about delivery time shortly.<br>
+              <img src="/assets/images/delivery.gif">
+            </p>
+          </div>
+          `);
 
-    this.modal.setTitle('Success!');
-    this.cartItems = [];
-    this.modal.setBody(createElement(`
-        <div class="modal__body-inner">
-          <p>
-            Order successful! Your order is being cooked :) <br>
-            We’ll notify you about delivery time shortly.<br>
-            <img src="/assets/images/delivery.gif">
-          </p>
-        </div>`
-    ));
-  };
+          this.modal.setBody(orderSuccessful);
+        }
+      });
+  }
 
   addEventListeners() {
     this.cartIcon.elem.onclick = () => this.renderModal();
