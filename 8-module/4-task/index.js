@@ -108,12 +108,12 @@ export default class Cart {
 
   renderModal() {
     this.modal = new Modal();
+    this.modal.open();
     this.modal.setTitle('Your order');
 
     let modalBody = this.#makeModalBody();
     this.modal.setBody(modalBody);
     this.#addListenersToModal(this.modal.modal)
-    this.modal.open();
   }
 
   onProductUpdate(cartItem) {
@@ -135,20 +135,24 @@ export default class Cart {
   onSubmit(event) {
     event.preventDefault();
 
-    let submitButton = submitForm.querySelector('.cart-buttons__button');
+    let submitForm = document.querySelector('.cart-form');
+    console.log(typeof submitForm);
+    console.debug(submitForm);
+    console.dir(submitForm);
+
+    let submitButton = document.querySelector('.cart-buttons__button');
     submitButton.classList.toggle('is-loading', true);
 
-    let formData = new FormData([submitForm]);
+    let formData = new FormData(submitForm);
     let response = fetch('https://httpbin.org/post', {
         method: 'POST',
         body: formData,
       }).then(response => response.json())
     ;
 
-    if (response.ok) {
-      modalWindow.setTitle('Success!');
-      this.cartItems.splice(0);
-      modalWindow.setBody(createElement(`
+    this.modal.setTitle('Success!');
+    this.cartItems = [];
+    this.modal.setBody(createElement(`
         <div class="modal__body-inner">
           <p>
             Order successful! Your order is being cooked :) <br>
@@ -156,8 +160,7 @@ export default class Cart {
             <img src="/assets/images/delivery.gif">
           </p>
         </div>`
-      ));
-    }
+    ));
   };
 
   addEventListeners() {
@@ -192,6 +195,10 @@ export default class Cart {
         }
       })
     });
+
+    modalWindow.addEventListener('submit', (event) => {
+      this.onSubmit(event);
+    })
   }
 }
 
