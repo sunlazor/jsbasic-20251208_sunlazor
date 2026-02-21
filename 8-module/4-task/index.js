@@ -159,10 +159,8 @@ export default class Cart {
       product.addEventListener('click', (event) => {
         if (event.target.closest('.cart-counter__button_plus')) {
           this.updateProductCount(product.dataset.productId, 1);
-          console.log(' count increaded ');
         } else if (event.target.closest('.cart-counter__button_minus')) {
           this.updateProductCount(product.dataset.productId, -1);
-          console.log(' count descreades ');
         }
 
         if (this.cartItems.length < 1) {

@@ -52,7 +52,7 @@ export default class CartIcon {
 
     if (document.documentElement.clientWidth > 767 && window.pageYOffset > this.startPosition.top) {
       let leftIndent = Math.min(
-        document.querySelector('.container').getBoundingClientRect().right + 20,
+        document.querySelector('.header.container').getBoundingClientRect().right + 20,
         document.documentElement.clientWidth - this.elem.offsetWidth - 10
       ) + 'px';
       Object.assign(this.elem.style, {

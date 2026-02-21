@@ -84,7 +84,6 @@ export default class StepSlider {
   #addSliderChanges(slider) {
     slider.addEventListener('slider-change', (event) => {
       const spans = slider.querySelectorAll('.slider__steps span');
-      console.log(event.detail);
       const span = spans[event.detail];
 
       const sliderValueDiv = slider.querySelector('.slider__thumb .slider__value');
