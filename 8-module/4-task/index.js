@@ -133,7 +133,31 @@ export default class Cart {
   }
 
   onSubmit(event) {
-    // ...ваш код
+    event.preventDefault();
+
+    let submitButton = submitForm.querySelector('.cart-buttons__button');
+    submitButton.classList.toggle('is-loading', true);
+
+    let formData = new FormData([submitForm]);
+    let response = fetch('https://httpbin.org/post', {
+        method: 'POST',
+        body: formData,
+      }).then(response => response.json())
+    ;
+
+    if (response.ok) {
+      modalWindow.setTitle('Success!');
+      this.cartItems.splice(0);
+      modalWindow.setBody(createElement(`
+        <div class="modal__body-inner">
+          <p>
+            Order successful! Your order is being cooked :) <br>
+            We’ll notify you about delivery time shortly.<br>
+            <img src="/assets/images/delivery.gif">
+          </p>
+        </div>`
+      ));
+    }
   };
 
   addEventListeners() {
@@ -167,36 +191,6 @@ export default class Cart {
           this.modal.close();
         }
       })
-    });
-
-    let submitForm = document.querySelector('.cart-form');
-    submitForm.addEventListener('submit', (event) => {
-      event.preventDefault();
-
-      let submitButton = submitForm.querySelector('.cart-buttons__button');
-      submitButton.classList.toggle('is-loading', true);
-
-      let cartForm = submitForm.querySelector('.cart-form');
-      let formData = new FormData([cartForm]);
-      let response = fetch('https://httpbin.org/post', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (response.then(response => response.json())) {
-        modalWindow.setTitle('Success!');
-        this.cartItems.splice(0);
-        modalWindow.setBody(createElement(`
-        <div class="modal__body-inner">
-          <p>
-            Order successful! Your order is being cooked :) <br>
-            We’ll notify you about delivery time shortly.<br>
-            <img src="/assets/images/delivery.gif">
-          </p>
-        </div>`
-        ));
-      }
-
     });
   }
 }
