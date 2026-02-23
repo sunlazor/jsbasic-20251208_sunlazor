@@ -15,6 +15,9 @@ export default class Main {
   constructor() {
     let carousel = new Carousel(slides);
     document.querySelector('div[data-carousel-holder]').appendChild(carousel.elem);
+
+    let ribbonMenu = new RibbonMenu(categories);
+    document.querySelector('div[data-ribbon-holder]').appendChild(ribbonMenu.elem);
   }
 
   async render() {
