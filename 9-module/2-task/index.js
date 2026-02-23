@@ -13,9 +13,16 @@ import Cart from '../../8-module/4-task/index.js';
 export default class Main {
 
   constructor() {
+    let carousel = new Carousel(slides);
+    document.querySelector('div[data-carousel-holder]').appendChild(carousel.elem);
   }
 
   async render() {
-    // ... ваш код
+    // let response = await fetch('./products.json');
+    // if (response.ok) {
+    //   this.slides = await response.json();
+    // }
+    //
+    // console.log(slides);
   }
 }
