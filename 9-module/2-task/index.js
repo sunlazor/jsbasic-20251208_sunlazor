@@ -5,7 +5,7 @@ import RibbonMenu from '../../7-module/1-task/index.js';
 import categories from '../../7-module/1-task/categories.js';
 
 import StepSlider from '../../7-module/4-task/index.js';
-import ProductsGrid from '../../8-module/2-task/index.js';
+import ProductGrid from "../../8-module/2-task/index.js";
 
 import CartIcon from '../../8-module/1-task/index.js';
 import Cart from '../../8-module/4-task/index.js';
@@ -31,11 +31,18 @@ export default class Main {
   }
 
   async render() {
-    // let response = await fetch('./products.json');
-    // if (response.ok) {
-    //   this.slides = await response.json();
-    // }
-    //
-    // console.log(slides);
+    this.#getSlides();
+  }
+
+  #getSlides() {
+    fetch('./products.json')
+      .then(response => response.json())
+      .then(products => {
+        let productGrid = new ProductGrid(products);
+        let gridDiv = document.querySelector('div[data-products-grid-holder]');
+        gridDiv.innerHTML = '';
+        gridDiv.appendChild(productGrid.elem);
+      })
+    ;
   }
 }
