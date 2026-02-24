@@ -11,6 +11,7 @@ import CartIcon from '../../8-module/1-task/index.js';
 import Cart from '../../8-module/4-task/index.js';
 
 export default class Main {
+  cart;
 
   constructor() {
     let carousel = new Carousel(slides);
@@ -18,6 +19,15 @@ export default class Main {
 
     let ribbonMenu = new RibbonMenu(categories);
     document.querySelector('div[data-ribbon-holder]').appendChild(ribbonMenu.elem);
+
+    let sliderInit = {steps: 5, value: 3};
+    let stepSlider = new StepSlider(sliderInit);
+    document.querySelector('div[data-slider-holder]').appendChild(stepSlider.elem);
+
+    let cartIcon = new CartIcon();
+    document.querySelector('div[data-cart-icon-holder]').appendChild(cartIcon.elem);
+
+    this.cart = new Cart(cartIcon);
   }
 
   async render() {
