@@ -57,6 +57,14 @@ export default class Main {
     document.body.addEventListener('ribbon-select', (ev) => {
       this.productGrid.updateFilter({category: ev.detail});
     });
+
+    document.body.addEventListener('change', (ev) => {
+      if (ev.target.id === 'vegeterian-checkbox') {
+        this.productGrid.updateFilter({vegeterianOnly: ev.target.checked});
+      } else if (ev.target.id === 'nuts-checkbox') {
+        this.productGrid.updateFilter({noNuts: ev.target.checked});
+      }
+    });
   }
 
   #getSlides() {
