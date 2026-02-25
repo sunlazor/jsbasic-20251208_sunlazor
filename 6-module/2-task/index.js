@@ -3,7 +3,7 @@ export default class ProductCard {
 
   constructor(product) {
     this.elem = this.#createElement(
-`<div class="card">
+      `<div class="card">
         <div class="card__top">
           <img src="/assets/images/products/${product.image}" class="card__image" alt="product" />
           <span class="card__price">€${product.price.toFixed(2)}</span>
@@ -23,7 +23,8 @@ export default class ProductCard {
     });
 
     let button = this.elem.querySelector('.card__button');
-    button.onclick = () => button.dispatchEvent(event); }
+    button.onclick = () => button.dispatchEvent(event);
+  }
 
   #createElement(html) {
     const div = document.createElement('div');
