@@ -31,8 +31,7 @@ export default class Main {
   }
 
   async render() {
-    this.#getSlides();
-
+    await this.#getSlides();
     this.#addListeners();
   }
 
@@ -68,23 +67,30 @@ export default class Main {
   }
 
   #getSlides() {
-    fetch('./products.json')
-      .then(response => response.json())
-      .then(products => {
-        this.serverProducts = products;
+    return new Promise(resolve => {
+      fetch('./products.json')
+        .then(response => response.json())
+        .then(products => {
+          this.serverProducts = products;
 
-        this.productGrid = new ProductGrid(products);
-        let gridDiv = document.querySelector('div[data-products-grid-holder]');
-        gridDiv.innerHTML = '';
-        gridDiv.appendChild(this.productGrid.elem);
+          this.productGrid = new ProductGrid(products);
+          let gridDiv = document.querySelector('div[data-products-grid-holder]');
+          if (!gridDiv) {
+            return;
+          }
+          gridDiv.innerHTML = '';
+          gridDiv.appendChild(this.productGrid.elem);
 
-        this.productGrid.updateFilter({
-          noNuts: document.getElementById('nuts-checkbox').checked,
-          vegeterianOnly: document.getElementById('vegeterian-checkbox').checked,
-          maxSpiciness: this.stepSlider.value,
-          category: this.ribbonMenu.value
-        });
-      })
-    ;
+          this.productGrid.updateFilter({
+            noNuts: document.getElementById('nuts-checkbox').checked,
+            vegeterianOnly: document.getElementById('vegeterian-checkbox').checked,
+            maxSpiciness: this.stepSlider.value,
+            category: this.ribbonMenu.value
+          });
+
+          resolve();
+        })
+      ;
+    });
   }
 }
