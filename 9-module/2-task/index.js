@@ -53,6 +53,10 @@ export default class Main {
     document.body.addEventListener('slider-change', (ev) => {
       this.productGrid.updateFilter({maxSpiciness: ev.detail});
     });
+
+    document.body.addEventListener('ribbon-select', (ev) => {
+      this.productGrid.updateFilter({category: ev.detail});
+    });
   }
 
   #getSlides() {
