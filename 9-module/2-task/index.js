@@ -17,12 +17,12 @@ export default class Main {
     let carousel = new Carousel(slides);
     document.querySelector('div[data-carousel-holder]').appendChild(carousel.elem);
 
-    let ribbonMenu = new RibbonMenu(categories);
-    document.querySelector('div[data-ribbon-holder]').appendChild(ribbonMenu.elem);
+    this.ribbonMenu = new RibbonMenu(categories);
+    document.querySelector('div[data-ribbon-holder]').appendChild(this.ribbonMenu.elem);
 
     let sliderInit = {steps: 5, value: 3};
-    let stepSlider = new StepSlider(sliderInit);
-    document.querySelector('div[data-slider-holder]').appendChild(stepSlider.elem);
+    this.stepSlider = new StepSlider(sliderInit);
+    document.querySelector('div[data-slider-holder]').appendChild(this.stepSlider.elem);
 
     let cartIcon = new CartIcon();
     document.querySelector('div[data-cart-icon-holder]').appendChild(cartIcon.elem);
@@ -32,16 +32,40 @@ export default class Main {
 
   async render() {
     this.#getSlides();
+
+    this.#addListeners();
+  }
+
+  #addListeners() {
+    document.body.addEventListener('product-add', (ev) => {
+      let filteredProduct = this.productGrid.products.filter(item => {
+        return item.id === ev.detail
+      });
+
+      if (filteredProduct.length > 0) {
+        this.cart.addProduct(filteredProduct[0]);
+        // console.log(`product was added, and now: ${this.cart.getTotalCount()}`);
+      } else {
+        console.log('strange product appears');
+      }
+    });
   }
 
   #getSlides() {
     fetch('./products.json')
       .then(response => response.json())
       .then(products => {
-        let productGrid = new ProductGrid(products);
+        this.productGrid = new ProductGrid(products);
         let gridDiv = document.querySelector('div[data-products-grid-holder]');
         gridDiv.innerHTML = '';
-        gridDiv.appendChild(productGrid.elem);
+        gridDiv.appendChild(this.productGrid.elem);
+
+        this.productGrid.updateFilter({
+          noNuts: document.getElementById('nuts-checkbox').checked,
+          vegeterianOnly: document.getElementById('vegeterian-checkbox').checked,
+          maxSpiciness: this.stepSlider.value,
+          category: this.ribbonMenu.value
+        });
       })
     ;
   }
