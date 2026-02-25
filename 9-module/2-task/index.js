@@ -49,12 +49,18 @@ export default class Main {
         console.log('strange product appears');
       }
     });
+
+    document.body.addEventListener('slider-change', (ev) => {
+      this.productGrid.updateFilter({maxSpiciness: ev.detail});
+    });
   }
 
   #getSlides() {
     fetch('./products.json')
       .then(response => response.json())
       .then(products => {
+        this.serverProducts = products;
+
         this.productGrid = new ProductGrid(products);
         let gridDiv = document.querySelector('div[data-products-grid-holder]');
         gridDiv.innerHTML = '';
